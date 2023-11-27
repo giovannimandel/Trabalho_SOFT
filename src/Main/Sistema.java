@@ -9,25 +9,22 @@ import java.util.Scanner;
 
 public class Sistema {
     private Scanner in = new Scanner(System.in);
-
-    private ArrendaContr arrendas = new ArrendaContr();
     private BarcoContr barcos = new BarcoContr();
-    private CameraContr cameras = new CameraContr();
     private CompanhiaContr companhias = new CompanhiaContr();
     private FuncionarioContr funcionarios = new FuncionarioContr();
-    private IncidenteContr incidentes = new IncidenteContr();
     private LocalContr locais = new LocalContr();
+    private CaisContr cais = new CaisContr();
+    private EstaleiroContr estaleiros = new EstaleiroContr();
+    private GalpaoContr galpoes = new GalpaoContr();
 
     public Sistema() {
         funcionarios.add(new Funcionario(0, "Nenhum", "Nenhum", "Nenhum", "Nenhum", "Nenhum"));
-        locais.add(new Local(0, "Nenhum", "0", "Nenhum"));
+        locais.add(new Local(0, "Nenhum", "0"));
         companhias.add(new Companhia(0, "Nenhuma", "Nenhum", "Nenhum", "Nenhum", (Funcionario)funcionarios.get(0)));
-        arrendas.add(new Arrenda(0, "Nenhuma", (Local)locais.get(0), (Companhia)companhias.get(0)));
         barcos.add(new Barco(0, "Nenhum", "Nenhum", (Funcionario)funcionarios.get(0), (Companhia)companhias.get(0), (Local)locais.get(0)));
-        cameras.add(new Camera(0, "0-0-0", (Local)locais.get(0)));
-        incidentes.add(new Incidente(0, "Nenhum", "0-0-0", "Nenhum", (Local)locais.get(0), (Funcionario)funcionarios.get(0)));
-
-        locais.add(new Local(1, "Local de Testes", "837465", "Doca"));
+        galpoes.add(new Galpao(0, "Galpao de eletronicos", "123456789", 1));
+        estaleiros.add(new Estaleiro(0, "Estaleiro", "123456", (Barco) barcos.get(0)));
+        locais.add(new Local(1, "Local de Testes", "837465"));
         funcionarios.add(new Funcionario(1, "Lucas", "Testador", "teste@gmail.com", "9283456", "8374652"));
         companhias.add(new Companhia(1, "Companhia de Testes", "aksmhjkdfg@alk.com", "3984756", "9238465", (Funcionario)funcionarios.get(1)));
         barcos.add(new Barco(1, "Barco Testado", "Lancha", (Funcionario)funcionarios.get(1), (Companhia)companhias.get(1), (Local)locais.get(1)));
@@ -44,20 +41,6 @@ public class Sistema {
         }
     }
 
-    private Arrenda askArrenda() {
-        System.out.println("Escolha a Arrenda: ");
-        listAll(arrendas.getArrendas());
-        try {
-            int id = in.nextInt();
-            in.nextLine();
-            Arrenda arre = (Arrenda)arrendas.get(id);
-            return arre;
-        } catch(Exception e) {
-            System.err.println("Arrenda escolhida não existe");
-        }
-        return null;
-    }
-
     private Barco askBarco() {
         System.out.println("Escolha o Barco: ");
         listAll(barcos.getBarcos());
@@ -68,20 +51,6 @@ public class Sistema {
             return barco;
         } catch(Exception e) {
             System.err.println("Barco escolhido não existe");
-        }
-        return null;
-    }
-
-    private Camera askCamera() {
-        System.out.println("Escolha a Câmera: ");
-        listAll(cameras.getCameras());
-        try {
-            int id = in.nextInt();
-            in.nextLine();
-            Camera cam = (Camera)cameras.get(id);
-            return cam;
-        } catch(Exception e) {
-            System.err.println("Câmera escolhida não existe");
         }
         return null;
     }
@@ -114,20 +83,6 @@ public class Sistema {
         return null;
     }
 
-    private Incidente askIncidente() {
-        System.out.println("Escolha o Incidente: ");
-        listAll(incidentes.getIncidentes());
-        try {
-            int id = in.nextInt();
-            in.nextLine();
-            Incidente inc = (Incidente)incidentes.get(id);
-            return inc;
-        } catch(Exception e) {
-            System.err.println("Incidente escolhido não existe");
-        }
-        return null;
-    }
-
     private Local askLocal() {
         System.out.println("Escolha o Local: ");
         listAll(locais.getLocais());
@@ -142,16 +97,6 @@ public class Sistema {
         return null;
     }
 
-    public void addArrenda(int idd) {
-        System.out.println("Tipo: ");
-        String tipo = in.nextLine();
-        Local local = askLocal();
-        Companhia comp = askCompanhia();
-        if (idd == 0)
-            idd = getLastId(arrendas.getArrendas()) + 1;
-        arrendas.add(new Arrenda(idd, tipo, local, comp));
-    }
-
     public void addBarco(int idd) {
         System.out.println("Nome: ");
         String nome = in.nextLine();
@@ -163,15 +108,6 @@ public class Sistema {
         if (idd == 0)
             idd = getLastId(barcos.getBarcos()) + 1;
         barcos.add(new Barco(idd, nome, tipo, func, comp, local));
-    }
-
-    public void addCamera(int idd) {
-        System.out.println("Data da última gravação: ");
-        String dt = in.nextLine();
-        Local local = askLocal();
-        if (idd == 0)
-            idd = getLastId(cameras.getCameras()) + 1;
-        cameras.add(new Camera(idd, dt, local));
     }
 
     public void addCompanhia(int idd) {
@@ -206,43 +142,18 @@ public class Sistema {
         funcionarios.add(new Funcionario(idd, nome, trabalho, email, fone, cpf));
     }
 
-    public void addIncidente(int idd) {
-        System.out.println("Descrição: ");
-        String desc = in.nextLine();
-        System.out.println("Data do Incidente: ");
-        String dt = in.nextLine();
-        System.out.println("Tipo do Incidente: ");
-        String tipo = in.nextLine();
-        Local local = askLocal();
-        Funcionario resp = askFuncionario();
-        if (idd == 0)
-            idd = getLastId(incidentes.getIncidentes()) + 1;
-
-        incidentes.add(new Incidente(idd, desc, dt, tipo, local, resp));
-    }
-
     public void addLocal(int idd) {
         System.out.println("Nome: ");
         String nome = in.nextLine();
         System.out.println("Coordenada: ");
         String coord = in.nextLine();
-        System.out.println("Tipo: ");
-        String tipo = in.nextLine();
         if (idd == 0)
             idd = getLastId(locais.getLocais()) + 1;
-        locais.add(new Local(idd, nome, coord, tipo));
-    }
-
-    public void listArrendas() {
-        listAll(arrendas.getArrendas());
+        locais.add(new Local(idd, nome, coord));
     }
 
     public void listBarcos() {
         listAll(barcos.getBarcos());
-    }
-
-    public void listCameras() {
-        listAll(cameras.getCameras());
     }
 
     public void listCompanhias() {
@@ -253,30 +164,14 @@ public class Sistema {
         listAll(funcionarios.getFuncionarios());
     }
 
-    public void listIncidentes() {
-        listAll(incidentes.getIncidentes());
-    }
-
     public void listLocais() {
         listAll(locais.getLocais());
-    }
-
-    public void alterArrenda() {
-        Arrenda arre = askArrenda();
-        addArrenda(arre.getId());
-        arrendas.remove(arre);
     }
 
     public void alterBarco() {
         Barco barco = askBarco();
         addBarco(barco.getId());
         barcos.remove(barco);
-    }
-
-    public void alterCamera() {
-        Camera cam = askCamera();
-        addCamera(cam.getId());
-        cameras.remove(cam);
     }
 
     public void alterCompanhia() {
@@ -289,12 +184,6 @@ public class Sistema {
         Funcionario func = askFuncionario();
         addFuncionario(func.getId());
         funcionarios.remove(func);
-    }
-
-    public void alterIncidente() {
-        Incidente inc = askIncidente();
-        addIncidente(inc.getId());
-        incidentes.remove(inc);
     }
 
     public void alterLocal() {
@@ -329,5 +218,165 @@ public class Sistema {
     public void listBarcosNoLocal() {
         Local local = askLocal();
         listAll(barcos.getBarcosNoLocal(local));
+    }
+
+    public void addCais(int idd) {
+        System.out.println("Nome: ");
+        String nome = in.nextLine();
+        System.out.println("Coordenada: ");
+        String coord = in.nextLine();
+        System.out.println("Tem mercadoria?");
+        boolean temMercadoria = Boolean.parseBoolean(in.nextLine());
+        Barco barcoAtracado = askBarco();
+        if (idd == 0)
+            idd = getLastId(cais.getCais()) + 1;
+        cais.add(new Cais(idd, nome, coord, temMercadoria, barcoAtracado));
+    }
+
+    public void listCais() {
+        listAll(cais.getCais());
+    }
+
+    private Cais askCais() {
+        System.out.println("Escolha o cais: ");
+        listAll(cais.getCais());
+        try {
+            int id = in.nextInt();
+            in.nextLine();
+            Cais c = (Cais)cais.get(id);
+            return c;
+        } catch(Exception e) {
+            System.err.println("Cais escolhido não existe");
+        }
+        return null;
+    }
+
+    public void alterCais() {
+        Cais cais = askCais();
+        addCais(cais.getId());
+        locais.remove(cais);
+    }
+
+    public void addEstaleiro(int idd) {
+        System.out.println("Nome: ");
+        String nome = in.nextLine();
+        System.out.println("Coordenada: ");
+        String coord = in.nextLine();
+        Barco barco = askBarco();
+        if (idd == 0)
+            idd = getLastId(estaleiros.getEstaleiros()) + 1;
+        estaleiros.add(new Estaleiro(idd, nome, coord, barco));
+    }
+
+    public void listEstaleiros() {
+        listAll(estaleiros.getEstaleiros());
+    }
+
+    private Estaleiro askEstaleiro() {
+        System.out.println("Escolha o estaleiro: ");
+        listAll(estaleiros.getEstaleiros());
+        try {
+            int id = in.nextInt();
+            in.nextLine();
+            Estaleiro estaleiro = (Estaleiro) estaleiros.get(id);
+            return estaleiro;
+        } catch(Exception e) {
+            System.err.println("Estaleiro escolhido não existe");
+        }
+        return null;
+    }
+
+    public void alterEstaleiro() {
+        Estaleiro estaleiro = askEstaleiro();
+        addEstaleiro(estaleiro.getId());
+        estaleiros.remove(estaleiro);
+    }
+
+    public void addGalpao(int idd) {
+        System.out.println("Nome: ");
+        String nome = in.nextLine();
+        System.out.println("Coordenada: ");
+        String coord = in.nextLine();
+        System.out.println("Tem mercadoria?");
+        int qtdMercadoria = in.nextInt();
+        in.nextLine();
+        if (idd == 0)
+            idd = getLastId(galpoes.getGalpoes()) + 1;
+        galpoes.add(new Galpao(idd, nome, coord, qtdMercadoria));
+    }
+
+    public void listGalpoes() {
+        listAll(galpoes.getGalpoes());
+    }
+
+    private Galpao askGalpao() {
+        System.out.println("Escolha o galpao: ");
+        listAll(galpoes.getGalpoes());
+        try {
+            int id = in.nextInt();
+            in.nextLine();
+            Galpao galpao = (Galpao) galpoes.get(id);
+            return galpao;
+        } catch(Exception e) {
+            System.err.println("Galpao escolhido não existe");
+        }
+        return null;
+    }
+
+    public void alterGalpao() {
+        Galpao galpao = askGalpao();
+        addGalpao(galpao.getId());
+        galpoes.remove(galpao);
+    }
+
+    public void moverBarco(Barco barco, Local local){
+        System.out.println("O barco foi movido de " + barco.getLocal().getNome());
+        if (barco.hasLocal()) {
+            barco.setLocal(local);
+        }
+        System.out.println(" para o local " + barco.getLocal().getNome());
+    }
+
+    public void descarregarMercadoria(Barco barco, Cais cais){
+        if(!cais.temMercadoria()){
+            barco.setTemMercadoria(false);
+            System.out.println("O barco foi descarregado.");
+        }else{
+            System.out.println("Nao foi possivel descarregar, o cais ja esta cheio.");
+        }
+    }
+
+    public void carregarMercadoria(Barco barco, Cais cais){
+        if(cais.temMercadoria()){
+            barco.setTemMercadoria(true);
+            System.out.println("O barco foi carregado.");
+        }else{
+            System.out.println("Nao ha mercadoria para ser carregada.");
+        }
+    }
+
+    public void consertarBarco(Barco barco){
+        if(barco.getLocal() instanceof Estaleiro){
+            if(barco.isQuebrado()){
+                barco.setQuebrado(false);
+                System.out.println("O barco foi consertado");
+            }else {
+                System.out.println("O barco nao precisa de conserto.");
+            }
+        }else{
+            System.out.println("O barco nao esta em um estaleiro para ser consertado.");
+        }
+
+    }
+
+    public void transportarMercadoria(Cais cais, Galpao galpao){
+        if(galpao.getQtdMercadoria() < 4){
+            cais.setTemMercadoria(false);
+            galpao.setQtdMercadoria(galpao.getQtdMercadoria() + 1);
+            System.out.println("A mercadoria foi transportada de " + cais.getNome() + " para " + galpao.getNome());
+            System.out.println("O " + galpao.getNome() + " esta com " + galpao.getQtdMercadoria() + " mercadoria(s).");
+        }else{
+            System.out.println("Galpao cheio");
+        }
     }
 }

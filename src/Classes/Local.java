@@ -2,14 +2,17 @@ package Classes;
 
 public class Local {
     private int id;
-    private String nome, coordenadas, tipo;
+    private String nome, coordenadas;
 
-    public Local(int id, String nome, String coordenadas, String tipo) {
+    public Local(int id, String nome, String coordenadas) {
         super();
         this.id = id;
         this.nome = nome;
         this.coordenadas = coordenadas;
-        this.tipo = tipo;
+    }
+
+    public Local(){
+
     }
 
     public int getId() {
@@ -36,15 +39,7 @@ public class Local {
         this.coordenadas = coordenadas;
     }
 
-    public String getTipo() {
-        return tipo;
-    }
-
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
-    }
-
     public String toString() {
-        return this.id + " - " + this.nome + ", Tipo: " + this.tipo + ", Coordenadas: " + this.coordenadas;
+        return this.id + " - " + this.nome + ", Coordenadas: " + this.coordenadas;
     }
 }

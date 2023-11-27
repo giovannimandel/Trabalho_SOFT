@@ -9,6 +9,24 @@ public class Barco {
     private ArrayList<Object> capitaes = new ArrayList<Object>();
     private Companhia dono;
     private Local local;
+    private boolean temMercadoria;
+    private boolean quebrado;
+
+    public boolean isTemMercadoria() {
+        return temMercadoria;
+    }
+
+    public void setTemMercadoria(boolean temMercadoria) {
+        this.temMercadoria = temMercadoria;
+    }
+
+    public boolean isQuebrado() {
+        return quebrado;
+    }
+
+    public void setQuebrado(boolean quebrado) {
+        this.quebrado = quebrado;
+    }
 
     public Barco(int id, String nome, String tipo, Funcionario func, Companhia dono, Local local) {
         super();
